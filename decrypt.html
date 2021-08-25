@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telkomsel Orbit API Data Decryption Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+    <style>
+        #hasil {
+            max-width: 90vw;
+            word-wrap: break-word;
+        }
+
+        .header {
+            width: 75%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Telkomsel MyOrbit API Data Decryption Tool </h1>
+    <p class="header">Ini adalah tool sederhana untuk melakukan decryption API response pada website myorbit.id. Encryption
+        dilakukan pada website myorbit menggunakan algoritma AES-256 dengan key dan iv yang berada pada token response.</p>
+    <p>Masukan Text Data :</p>
+    <input type="text" name="ecrypted-data" id="encData" placeholder="encrypted data" />
+    <br>
+    <p>Masukan Token :</p>
+    <input type="text" name="token" id="token" placeholder="token" />
+    <button type="button" id="decryptButton">Decrypt</button>
+    <br>
+    <p id="hasil">Hasil decryption akan tertulis pada area ini</p>
+    <script>
+        const decryptButton = document.getElementById("decryptButton");
+        decryptButton.addEventListener("click", function () {
+            var encryptedData = document.getElementById('encData').value;
+            var token = document.getElementById('token').value;
+            var key = token.substr(token.length - 32);
+            var iv = token.substring(0, 16);
+            var result = CryptoJS.AES.decrypt(
+                    { ciphertext: CryptoJS.enc.Base64.parse(encryptedData) }, 
+                    CryptoJS.enc.Utf8.parse(key), 
+                    { iv: CryptoJS.enc.Utf8.parse(iv) }
+                ).toString(CryptoJS.enc.Utf8);
+            document.getElementById("hasil").innerText = result;
+        })
+    </script>
+</body>
+
+</html>
